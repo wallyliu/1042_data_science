@@ -3,12 +3,12 @@ args<-commandArgs(trailingOnly=TRUE)
 
 func_flag<-pmatch( "-query", args)
 in_flag<-pmatch( "-files", args)
-out_flag<-pmatch( "-out", args)
+out_flag<-pmatch( "–out", args)
 
 # use three variable "func, in_file, out_file" to record different arguments.
 func<-c( args[ (func_flag+1): (in_flag-1) ] )
 in_file<-c( args[ (in_flag+1): (out_flag-1) ] )
-out_file<-c( args[ (out_flag+1): length(args)] )
+out_file<-c( args[ (out_flag+1)])#: (out_flag+2) ] )
 
 # read the input file and stroe in variable "raw"
 row_name<-c('weight','Height')
@@ -16,9 +16,8 @@ col_name<-c()
 out<-data.frame(row_name)
 
 for( f_name in in_file ){
-	tmp <- paste("../Data/", f_name, sep="")
-	raw<-read.csv( tmp, stringsAsFactors=F ,header=T, sep=",")
-	col_name<-c( col_name, strsplit( f_name, ".csv"))
+	raw<-read.csv( f_name, stringsAsFactors=F ,header=T, sep=",")
+	col_name<-c( col_name, sub( "../Data/", "", f_name))
 	if( grepl( func, "max") ){
 		f_name<-c(max(raw[2]), max(raw[3]) )
 	}else{
@@ -45,4 +44,4 @@ if( grepl( func, "max") ){
 }
 
 out <- data.frame( Type=c(rownames(out)) , out)
-write.table( out, file=out_file, sep=",", na="type", quote=FALSE, row.names=FALSE)
+write.table( out, file=out_file, sep=",", quote=FALSE, row.names=FALSE)
