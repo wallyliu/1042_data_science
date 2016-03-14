@@ -3,12 +3,15 @@ args<-commandArgs(trailingOnly=TRUE)
 
 func_flag<-pmatch( "-query", args)
 in_flag<-pmatch( "-files", args)
-out_flag<-pmatch( "–out", args)
+out_flag<-pmatch( "-out", args)
 
 # use three variable "func, in_file, out_file" to record different arguments.
-func<-c( args[ (func_flag+1): (in_flag-1) ] )
-in_file<-c( args[ (in_flag+1): (out_flag-1) ] )
-out_file<-c( args[ (out_flag+1)])#: (out_flag+2) ] )
+func<-c( args[ (func_flag+1) ] )
+out_file<-c( args[ (out_flag+1)])
+
+i<-in_flag+1
+while( grepl( ".csv", args[i])){ i<-i+1 }
+in_file<-c( args[ (in_flag+1): (i-1)])
 
 # read the input file and stroe in variable "raw"
 row_name<-c('weight','Height')
