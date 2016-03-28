@@ -24,7 +24,7 @@ for( f_name in in_file ){
 	if( grepl( func, "max") ){
 		f_name<-c(max(raw[2]), max(raw[3]) )
 	}else{
-		f_name<-c(max(raw[2]), max(raw[3]) )
+		f_name<-c(min(raw[2]), min(raw[3]) )
 	}
 	out<-data.frame( out, f_name)
 }
