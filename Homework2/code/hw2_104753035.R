@@ -88,7 +88,7 @@ for( file in ifile ){
 		}
 
 		sig <- round(fisher.test(result, conf.level = 0.95)$p.value, digit=2)
-		sig_result <- c( sig_result, significant(sig<0.05) )
+		sig_result <- c( sig_result, significant(sig) )
 	}
 	dev.off()
 }
