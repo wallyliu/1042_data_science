@@ -1,8 +1,8 @@
 library('ROCR')
 judge<-function(i){ which.max(i) }
 significant<-function(i){
-	if( i<0.05 ){ "no" }
-	else{ "yes" }
+	if( i<0.05 ){ "yes" }
+	else{ "no" }
 }
 
 # parsing the argument in command line
@@ -27,30 +27,23 @@ ifile<-c( args[ (in_flag+1): (i-1)])
 
 # read the input file and stroe in variable "raw"
 # use "method" to store all method name in set
-f1_result<-c()
-auc_result<-c()
-sen_result<-c()
-spe_result<-c()
-auc_result<-c()
-sig_result<-c()
-parameter<-c()
-
-method<-c()
 tmp<-c()
 color<-c("red", "blue", "green", "brown", "yellow", "black", "pink", "grey", "purple", "orange")
 dir.create(ofile)
 
 for( file in ifile ){
-	tmp<-c(list.files( paste("../data/", file, sep="")))
-	for( i in tmp){
-		method<-c(method, paste( file, "/", i, sep="") )
-	}
-
+	tmp<-c(list.files( file))
 	index<-0
-	png( file=paste("./", ofile, "/", file, "_ROC.png", sep="" ))
+	png( file=paste("./", ofile, "/", sub("../data/", "", file), "_ROC.png", sep="" ))
+	f1_result<-c()
+	auc_result<-c()
+	sen_result<-c()
+	spe_result<-c()
+	sig_result<-c()
+	parameter<-c()
 	for( m in tmp ){
-		index<-(index%%10)+1
-		rawdata<-read.table( paste("../data/", file, "/", m, sep=""),header=T, sep=",")
+		index<-( index %% 10 )+1
+		rawdata<-read.table( paste("../data/", file, "/", m, sep=""), header=T, sep=",")
 		if( "F1" %in% query ){
 			tf<-c( tolower(rawdata$prediction) == tolower(rawdata$reference) )
 			pn<-c( tolower(rawdata$prediction) == target)
@@ -77,7 +70,7 @@ for( file in ifile ){
 			evaluation <- prediction( rawdata$pred.score, rawdata$reference)
 			perf <- performance( evaluation, 'tpr','fpr')
 			if( m == tmp[1] ){
-				plot(perf, main=paste("ROC Curves - ", file), col=color[index])
+				plot(perf, main=paste("ROC Curves - ", sub("../data/", "", file)), col=color[index])
 			}else{
 				plot(perf, add=TRUE, col=color[index])
 			}
@@ -91,19 +84,17 @@ for( file in ifile ){
 		sig_result <- c( sig_result, significant(sig) )
 	}
 	dev.off()
+
+	out_data<-data.frame( method=sub( ".csv", "", tmp), F1=f1_result, AUC=auc_result, sensitivity=sen_result, specificity=spe_result, significant=sig_result, stringsAsFactors = F)
+
+	if( "F1" %in% query ){ parameter<-c( parameter, "F1")}
+	if( "AUC" %in% query ){ parameter<-c( parameter, "AUC")}
+	if( "sensitivity" %in% query ){ parameter<-c( parameter, "sensitivity")}
+	if( "specificity" %in% query ){ parameter<-c( parameter, "specificity")}
+
+	index<-sapply(out_data[,parameter], judge)
+
+	# output file
+	out_data<-rbind( out_data, c( "highest", sub( ".csv", "", tmp[index]), "nan") )
+	write.table( out_data, file=paste( "./", ofile, "/", sub("../data/", "", file), ".csv", sep=""), sep=",", row.names=FALSE, quote=FALSE)
 }
-
-
-method<-sub( ".csv", "", method)
-out_data<-data.frame( method=method, F1=f1_result, AUC=auc_result, sensitivity=sen_result, specificity=spe_result, significant=sig_result, stringsAsFactors = F)
-if( "F1" %in% query ){ parameter<-c( parameter, "F1")}
-if( "AUC" %in% query ){ parameter<-c( parameter, "AUC")}
-if( "sensitivity" %in% query ){ parameter<-c( parameter, "sensitivity")}
-if( "specificity" %in% query ){ parameter<-c( parameter, "specificity")}
-
-#index<-sapply(out_data[,c("F1","AUC","sensitivity","specificity")], judge)
-index<-sapply(out_data[,parameter], judge)
-
-# output file
-out_data<-rbind( out_data, c( "highest", method[index], "nan") )
-write.table( out_data, file=paste( "./", ofile, "/", ofile, ".csv", sep=""), sep=",", row.names=FALSE, quote=FALSE)
