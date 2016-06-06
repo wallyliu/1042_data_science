@@ -1,5 +1,4 @@
 library('ROCR')
-
 judge<-function(i){ which.max(i) }
 significant<-function(i){
 	if( i<0.05 ){ "yes" }

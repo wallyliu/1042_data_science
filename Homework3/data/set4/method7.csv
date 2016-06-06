@@ -1,0 +1,13 @@
+persons,prediction,reference,pred.score
+person1,Female,Male,0.258357903454453
+person2,Male,Female,0.589766256976873
+person3,Female,Male,0.18202835903503
+person4,Female,Male,0.161421615397558
+person5,Male,Female,0.950494258664548
+person6,Female,Female,0.166521247942001
+person7,Male,Male,0.774229641072452
+person8,Female,Female,0.0548103204928339
+person9,Female,Female,0.231910176109523
+person10,Male,Male,0.55083014536649
+person11,Male,Male,0.836574418703094
+person12,Female,Female,0.300681201508269

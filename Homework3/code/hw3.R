@@ -1,10 +1,5 @@
 library('ROCR')
-
 judge<-function(i){ which.max(i) }
-significant<-function(i){
-	if( i<0.05 ){ "yes" }
-	else{ "no" }
-}
 
 # parsing the argument in command line
 args<-commandArgs(trailingOnly=TRUE)
@@ -40,7 +35,6 @@ for( file in ifile ){
 	auc_result<-c()
 	sen_result<-c()
 	spe_result<-c()
-	sig_result<-c()
 	parameter<-c()
 	for( m in tmp ){
 		index<-( index %% 10 )+1
@@ -81,12 +75,8 @@ for( file in ifile ){
 			auc_result <- c( auc_result, auc)
 		}
 
-		sig <- round(fisher.test(result, conf.level = 0.95)$p.value, digit=2)
-		sig_result <- c( sig_result, significant(sig) )
 	}
 	dev.off()
-
-	out_data<-data.frame( method=sub( ".csv", "", tmp), F1=f1_result, AUC=auc_result, sensitivity=sen_result, specificity=spe_result, significant=sig_result, stringsAsFactors = F)
 
 	if( "F1" %in% query ){ parameter<-c( parameter, "F1")}
 	if( "AUC" %in% query ){ parameter<-c( parameter, "AUC")}
