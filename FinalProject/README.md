@@ -4,4 +4,4 @@
 	svm.csv : accuracy of svm model with cross-validation
 	dt.csv : accuracy of decision tree model with cross-validation
 ## Visulization:
-	[wallyliu's shiny app]<https://wallyliu.shinyapps.io/FinalProject/>
+	https://wallyliu.shinyapps.io/FinalProject/
