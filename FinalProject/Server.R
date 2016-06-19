@@ -115,9 +115,9 @@ shinyServer(function(input, output){
   })
   output$miss <- renderImage({
     if( input$dataset == "train"){
-      list(src = "train_miss.png", contentType = 'image/png', width = 700, height = 700)
+      list(src = "./image/train_miss.png", contentType = 'image/png', width = 700, height = 700)
     }else{
-      list(src = "test_miss.png", contentType = 'image/png', width = 700, height = 700)
+      list(src = "./image/test_miss.png", contentType = 'image/png', width = 700, height = 700)
     }
   }, deleteFile = FALSE)
   output$summary <- renderPrint(
